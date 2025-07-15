@@ -11,16 +11,16 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-  const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
-  if (token) {
-    setIsAuthenticated(true);
-    setIsAdmin(role === 'ADMIN');
-  } else {
-    setIsAuthenticated(false);
-    setIsAdmin(false);
-  }
-}, []);
+    const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
+    if (token) {
+      setIsAuthenticated(true);
+      setIsAdmin(role === 'ADMIN');
+    } else {
+      setIsAuthenticated(false);
+      setIsAdmin(false);
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -41,9 +41,15 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
             color: '#fff',
           }}
         >
-          {/* Navegación izquierda */}
-          <div style={{ fontSize: '18px' }}>
-            <Link to="/" style={{ color: '#fff', marginRight: 16 }}>Inicio</Link>
+          {/* Navegación izquierda con logo */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <Link to="/" style={{ marginRight: 24 }}>
+              <img
+                src="/logo.png" // Asegúrate de que el logo esté en la carpeta `public/`
+                alt="Logo"
+                style={{ height: 40 }}
+              />
+            </Link>
             <Link to="/cars" style={{ color: '#fff', marginRight: 16 }}>Autos</Link>
             <Link to="/contact" style={{ color: '#fff' }}>Contacto</Link>
           </div>
