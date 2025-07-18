@@ -27,34 +27,60 @@ const HomePage = () => {
 
   return (
     <div>
-      {/* Hero seccion con imagen de fondo */}
+      {/* Sección Hero con parallax */}
       <div
         style={{
-          backgroundImage: `url('/hero.jpg')`, // Pon tu imagen en public/hero.jpg
+          backgroundImage: `url('/hero.jpg')`,
+          backgroundAttachment: 'fixed',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           height: '100vh',
+          position: 'relative',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          flexDirection: 'column',
           textAlign: 'center',
-          color: '#fff',
           padding: '0 20px',
         }}
       >
-        <Title level={1} style={{ color: '#fff', fontSize: '48px' }}>Bienvenido a Tu Concesionaria</Title>
-        <Paragraph style={{ fontSize: 20, maxWidth: 700 }}>
-          Encuentra el auto ideal para ti entre nuestra amplia variedad de vehículos nuevos y usados.
-        </Paragraph>
-        <div style={{ marginTop: 24 }}>
-          <Link to="/cars">
-            <Button type="primary" size="large">Ver Autos</Button>
-          </Link>
+        {/* Capa oscura sobre la imagen */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.4)', // Oscurece la imagen
+            zIndex: 1,
+          }}
+        ></div>
+
+        {/* Contenedor de texto opaco */}
+        <div
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.85)', // Fondo blanco opaco
+            padding: '40px',
+            borderRadius: 12,
+            zIndex: 2,
+            maxWidth: 700,
+          }}
+        >
+          <Title level={1} style={{ color: '#000', fontSize: '40px' }}>
+            Bienvenido a Tu Concesionaria
+          </Title>
+          <Paragraph style={{ fontSize: 18, color: '#333' }}>
+            Encuentra el auto ideal para ti entre nuestra amplia variedad de vehículos nuevos y usados.
+          </Paragraph>
+          <div style={{ marginTop: 24 }}>
+            <Link to="/cars">
+              <Button type="primary" size="large">Ver Autos</Button>
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Contenido al scrollear */}
+      {/* Contenido principal */}
       <div style={{ padding: '60px 24px' }}>
         <Title level={3}>Autos destacados</Title>
         <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
