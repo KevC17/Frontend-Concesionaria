@@ -24,22 +24,30 @@ const AdminUsers = () => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [form] = Form.useForm();
 
-  const fetchUsers = async () => {
+  // 👇 Estados de paginación
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const pageSize = 10;
+
+  // ✅ Obtener usuarios con paginación
+  const fetchUsers = async (pageNumber = 1) => {
     setLoading(true);
     try {
-      const data = await getUsers();
-      setUsers(data.items);
+      const data = await getUsers(pageNumber, pageSize);
+      setUsers(data.items || []);
+      setTotal(data.meta?.totalItems || 0);
     } catch {
       message.error('Error al cargar usuarios');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteUser(id);
       message.success('Usuario eliminado');
-      fetchUsers();
+      fetchUsers(page);
     } catch {
       message.error('Error al eliminar');
     }
@@ -66,16 +74,16 @@ const AdminUsers = () => {
         await createUser(values);
         message.success('Usuario creado');
       }
-      fetchUsers();
       setIsModalOpen(false);
+      fetchUsers(page);
     } catch {
       message.error('Error al guardar usuario');
     }
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    fetchUsers(page);
+  }, [page]);
 
   return (
     <div>
@@ -86,6 +94,13 @@ const AdminUsers = () => {
         dataSource={users}
         rowKey="_id"
         loading={loading}
+        pagination={{
+          current: page,
+          pageSize,
+          total,
+          showSizeChanger: false,
+          onChange: (newPage) => setPage(newPage),
+        }}
         columns={[
           { title: 'Usuario', dataIndex: 'username' },
           { title: 'Correo', dataIndex: 'email' },
@@ -102,7 +117,8 @@ const AdminUsers = () => {
           {
             title: 'Rol',
             dataIndex: 'role',
-            render: (role: string) => (role === 'ADMIN' ? 'Administrador' : 'Usuario'),
+            render: (role: string) =>
+              role === 'ADMIN' ? 'Administrador' : 'Usuario',
           },
           {
             title: 'Acciones',
@@ -139,11 +155,7 @@ const AdminUsers = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="email"
-            label="Correo"
-            rules={[{ type: 'email' }]}
-          >
+          <Form.Item name="email" label="Correo" rules={[{ type: 'email' }]}>
             <Input />
           </Form.Item>
           <Form.Item name="profile" label="Perfil">
