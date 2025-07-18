@@ -9,11 +9,17 @@ const AdminCars = () => {
   const [currentCar, setCurrentCar] = useState<any>(null);
   const [form] = Form.useForm();
 
-  const fetchCars = async () => {
+  // 👉 NUEVO: estado para paginación
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const pageSize = 10;
+
+  const fetchCars = async (page = 1) => {
     setLoading(true);
     try {
-      const data = await getAdminCars();
+      const data = await getAdminCars(page, pageSize);
       setCars(data.items);
+      setTotal(data.totalItems || 0);
     } catch {
       message.error('Error al cargar autos');
     }
@@ -24,7 +30,7 @@ const AdminCars = () => {
     try {
       await deleteCar(id);
       message.success('Auto eliminado');
-      fetchCars();
+      fetchCars(page); // mantener la misma página
     } catch {
       message.error('Error al eliminar');
     }
@@ -51,7 +57,7 @@ const AdminCars = () => {
         await createCar(values);
         message.success('Auto creado');
       }
-      fetchCars();
+      fetchCars(page);
       setIsModalOpen(false);
     } catch {
       message.error('Error al guardar auto');
@@ -59,18 +65,25 @@ const AdminCars = () => {
   };
 
   useEffect(() => {
-    fetchCars();
-  }, []);
+    fetchCars(page);
+  }, [page]);
 
   return (
     <div>
       <Button type="primary" onClick={handleAdd} style={{ marginBottom: 16 }}>
         Registrar auto
       </Button>
+
       <Table
         dataSource={cars}
         rowKey="_id"
         loading={loading}
+        pagination={{
+          current: page,
+          pageSize,
+          total,
+          onChange: (newPage) => setPage(newPage),
+        }}
         columns={[
           { title: 'Marca', dataIndex: 'brand' },
           { title: 'Modelo', dataIndex: 'model' },
