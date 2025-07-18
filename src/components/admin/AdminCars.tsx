@@ -1,6 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Popconfirm, message, Modal, Form, Input, InputNumber, Switch } from 'antd';
-import { getAdminCars, createCar, updateCar, deleteCar } from '../../api/cars';
+import {
+  Table,
+  Button,
+  Popconfirm,
+  message,
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+  Switch,
+} from 'antd';
+import {
+  getAdminCars,
+  createCar,
+  updateCar,
+  deleteCar,
+} from '../../api/cars';
 
 const AdminCars = () => {
   const [cars, setCars] = useState<any[]>([]);
@@ -9,28 +24,30 @@ const AdminCars = () => {
   const [currentCar, setCurrentCar] = useState<any>(null);
   const [form] = Form.useForm();
 
-  // 👉 NUEVO: estado para paginación
+  // 👇 Paginación
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const pageSize = 10;
 
-  const fetchCars = async (page = 1) => {
+  // ✅ Cargar autos según la página
+  const fetchCars = async (pageNumber = 1) => {
     setLoading(true);
     try {
-      const data = await getAdminCars(page, pageSize);
+      const data = await getAdminCars(pageNumber, pageSize);
       setCars(data.items);
-      setTotal(data.totalItems || 0);
-    } catch {
+      setTotal(data.meta?.totalItems || 0);
+    } catch (error) {
       message.error('Error al cargar autos');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleDelete = async (id: string) => {
     try {
       await deleteCar(id);
       message.success('Auto eliminado');
-      fetchCars(page); // mantener la misma página
+      fetchCars(page); // recarga la página actual
     } catch {
       message.error('Error al eliminar');
     }
@@ -57,8 +74,8 @@ const AdminCars = () => {
         await createCar(values);
         message.success('Auto creado');
       }
-      fetchCars(page);
       setIsModalOpen(false);
+      fetchCars(page);
     } catch {
       message.error('Error al guardar auto');
     }
@@ -82,7 +99,10 @@ const AdminCars = () => {
           current: page,
           pageSize,
           total,
-          onChange: (newPage) => setPage(newPage),
+          showSizeChanger: false,
+          onChange: (newPage) => {
+            setPage(newPage);     // Actualiza la página actual
+          },
         }}
         columns={[
           { title: 'Marca', dataIndex: 'brand' },
@@ -134,7 +154,11 @@ const AdminCars = () => {
           <Form.Item name="vin" label="VIN" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="available" label="Disponible" valuePropName="checked">
+          <Form.Item
+            name="available"
+            label="Disponible"
+            valuePropName="checked"
+          >
             <Switch />
           </Form.Item>
           <Form.Item
