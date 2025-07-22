@@ -56,8 +56,8 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
                 style={{ height: 40 }}
               />
             </Link>
-            <Link to="/cars" style={{ color: '#fff', marginRight: 16 }}>Cars</Link>
-            <Link to="/contact" style={{ color: '#fff' }}>Contact</Link>
+            <Link to="/cars" style={{ color: '#fff', marginRight: 16 }}>Autos</Link>
+            <Link to="/contact" style={{ color: '#fff' }}>Contacto</Link>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -65,25 +65,25 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
               <>
                 {!isAdmin && (
                   <Link to="/profile" style={{ color: '#fff' }}>
-                    My Profile
+                    Mi perfil
                   </Link>
                 )}
                 {isAdmin && (
                   <Link to="/admin" style={{ color: '#fff' }}>
-                    Admin Panel
+                    Panel administrador
                   </Link>
                 )}
                 <span style={{ color: '#fff' }}>
-                  Welcome, {userName}
+                  Bienvenido, {userName}
                 </span>
                 <span onClick={handleLogout} style={{ color: '#fff', cursor: 'pointer' }}>
-                  Logout
+                  Cerrar sesión
                 </span>
               </>
             ) : (
               <>
-                <Link to="/login" style={{ color: '#fff' }}>Login</Link>
-                <Link to="/register" style={{ color: '#fff' }}>Register</Link>
+                <Link to="/login" style={{ color: '#fff' }}>Iniciar sesión</Link>
+                <Link to="/register" style={{ color: '#fff' }}>Registrarse</Link>
               </>
             )}
           </div>
@@ -93,7 +93,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       <Content style={{ padding: '24px', background: '#fff' }}>{children}</Content>
 
       <Footer style={{ textAlign: 'center' }}>
-        © {new Date().getFullYear()} Car Dealership. All rights reserved.
+        © {new Date().getFullYear()} Concesionaria de autos. Todos los derechos reservados.
       </Footer>
     </Layout>
   );
