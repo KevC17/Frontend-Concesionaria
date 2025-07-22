@@ -24,6 +24,6 @@ export const deleteUser = async (id: string) => {
 };
 
 export const getUserById = async (id: string) => {
-  const response = await api.get(`/users/${id}`);
+  const response = await api.get(`/admin/users/${id}`);
   return response.data;
 };

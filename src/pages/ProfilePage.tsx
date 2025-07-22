@@ -1,91 +1,96 @@
-import { useEffect, useState } from 'react'
-import { Card, Form, Input, Button, Spin, Alert, message } from 'antd'
-import axios from '../api/axios'
+import { useEffect, useState } from 'react';
+import { Button, Card, Form, Input, message } from 'antd';
+import { useAuth } from '../auth/AuthContext';
+import { getUserById, updateUser } from '../api/users';
 
 const ProfilePage = () => {
-  const [form] = Form.useForm()
-  const [user, setUser] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [submitting, setSubmitting] = useState(false)
-  const [editing, setEditing] = useState(false)
-  const [error, setError] = useState(false)
-
-  const fetchUserData = async () => {
-    const userId = localStorage.getItem('userId')
-    try {
-      const res = await axios.get(`/users/${userId}`)
-      setUser(res.data)
-      form.setFieldsValue({
-        username: res.data.username,
-        email: res.data.email || ''
-      })
-    } catch {
-      setError(true)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const { userId } = useAuth();
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [initialValues, setInitialValues] = useState({ username: '', email: '' });
 
   useEffect(() => {
-    fetchUserData()
-  }, [])
-
-  const handleUpdate = async (values: any) => {
-    const userId = localStorage.getItem('userId')
-    setSubmitting(true)
-    try {
-      await axios.put(`/users/${userId}/profile`, {
-        username: values.username,
-        email: values.email
+    if (!userId) return;
+    setLoading(true);
+    getUserById(userId)
+      .then(({ username, email }) => {
+        setInitialValues({ username, email });
+        form.setFieldsValue({ username, email });
       })
-      message.success('Perfil actualizado correctamente')
-      setEditing(false)
-      fetchUserData()
-    } catch {
-      message.error('No se pudo actualizar el perfil')
-    } finally {
-      setSubmitting(false)
-    }
-  }
+      .catch(() => {
+        message.error('Error al cargar los datos');
+      })
+      .finally(() => setLoading(false));
+  }, [userId, form]);
 
-  if (loading) return <Spin />
-  if (error) return <Alert message="No se pudo cargar el perfil" type="error" />
+  const handleSave = () => {
+    if (!userId) return;
+    form.validateFields().then((values) => {
+      setLoading(true);
+      updateUser(userId, values)
+        .then(() => {
+          message.success('Datos actualizados con éxito');
+          setInitialValues(values);
+          setEditing(false);
+        })
+        .catch(() => {
+          message.error('Error al actualizar los datos');
+        })
+        .finally(() => setLoading(false));
+    });
+  };
 
   return (
-    <div style={{ maxWidth: 500, margin: '0 auto', padding: '24px' }}>
-      <Card title="Mi perfil">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <Card title="Mi Perfil" className="w-full max-w-md">
         <Form
           form={form}
           layout="vertical"
-          onFinish={handleUpdate}
-          initialValues={{
-            username: user?.username,
-            email: user?.email || ''
-          }}
+          initialValues={initialValues}
+          disabled={!editing}
         >
-          <Form.Item label="Nombre de usuario" name="username" rules={[{ required: true }]}>
-            <Input disabled={!editing} />
+          <Form.Item
+            label="Nombre de usuario"
+            name="username"
+            rules={[{ required: true, message: 'El nombre de usuario es obligatorio' }]}
+          >
+            <Input />
           </Form.Item>
-          <Form.Item label="Correo electrónico" name="email">
-            <Input type="email" disabled={!editing} />
+          <Form.Item
+            label="Correo electrónico"
+            name="email"
+            rules={[
+              { required: true, message: 'El correo electrónico es obligatorio' },
+              { type: 'email', message: 'El correo no es válido' },
+            ]}
+          >
+            <Input />
           </Form.Item>
-          {editing ? (
-            <Form.Item>
-              <Button type="primary" htmlType="submit" loading={submitting} block>
+        </Form>
+
+        <div className="flex justify-end gap-2 mt-4">
+          {!editing ? (
+            <Button type="primary" onClick={() => setEditing(true)}>
+              Cambiar datos
+            </Button>
+          ) : (
+            <>
+              <Button onClick={() => {
+                form.setFieldsValue(initialValues);
+                setEditing(false);
+              }}>
+                Cancelar
+              </Button>
+              <Button type="primary" onClick={handleSave} loading={loading}>
                 Guardar cambios
               </Button>
-            </Form.Item>
-          ) : (
-            <Form.Item>
-              <Button type="default" onClick={() => setEditing(true)} block>
-                Cambiar datos
-              </Button>
-            </Form.Item>
+            </>
           )}
-        </Form>
+        </div>
       </Card>
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePage
+export default ProfilePage;
