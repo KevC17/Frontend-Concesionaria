@@ -50,40 +50,46 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Link to="/" style={{ marginRight: 24 }}>
-              <img
-                src="/logo.png"
-                alt="Logo"
-                style={{ height: 40 }}
-              />
+              <img src="/logo.png" alt="Logo" style={{ height: 40 }} />
             </Link>
-            <Link to="/cars" style={{ color: '#fff', marginRight: 16 }}>Autos</Link>
-            <Link to="/contact" style={{ color: '#fff' }}>Contacto</Link>
+            <Link to="/cars" style={{ color: '#fff', marginRight: 16 }}>
+              Autos
+            </Link>
+            <Link to="/contact" style={{ color: '#fff' }}>
+              Contacto
+            </Link>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {isAuthenticated ? (
               <>
                 {!isAdmin && (
-                  <Link to="/profile" style={{ color: '#fff' }}>
-                    Mi perfil
-                  </Link>
+                  <>
+                    <Link to="/user-activity" style={{ color: '#fff', marginRight: 16 }}>
+                      Mis movimientos
+                    </Link>
+                    <Link to="/profile" style={{ color: '#fff' }}>
+                      Mi perfil
+                    </Link>
+                  </>
                 )}
                 {isAdmin && (
                   <Link to="/admin" style={{ color: '#fff' }}>
                     Panel administrador
                   </Link>
                 )}
-                <span style={{ color: '#fff' }}>
-                  Bienvenido, {userName}
-                </span>
                 <span onClick={handleLogout} style={{ color: '#fff', cursor: 'pointer' }}>
                   Cerrar sesión
                 </span>
               </>
             ) : (
               <>
-                <Link to="/login" style={{ color: '#fff' }}>Iniciar sesión</Link>
-                <Link to="/register" style={{ color: '#fff' }}>Registrarse</Link>
+                <Link to="/login" style={{ color: '#fff' }}>
+                  Iniciar sesión
+                </Link>
+                <Link to="/register" style={{ color: '#fff' }}>
+                  Registrarse
+                </Link>
               </>
             )}
           </div>
@@ -93,7 +99,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       <Content style={{ padding: '24px', background: '#fff' }}>{children}</Content>
 
       <Footer style={{ textAlign: 'center' }}>
-        © {new Date().getFullYear()} Concesionaria de autos. Todos los derechos reservados.
+        © {new Date().getFullYear()} Concesionaria de autos Fast. Todos los derechos reservados.
       </Footer>
     </Layout>
   );

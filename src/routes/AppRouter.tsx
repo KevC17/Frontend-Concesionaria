@@ -7,6 +7,7 @@ import ContactPage from '../pages/ContactPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 import AdminPage from '../pages/AdminPage';
+import UserActivity from '../pages/UserActivityPage';
 import PrivateRoute from './PrivateRoute';
 import PublicOnlyRoute from './PublicOnlyRoute';
 import PurchasePage from '../pages/PurchasePage';
@@ -38,6 +39,16 @@ const AppRouter = () => {
           <PrivateRoute>
             <MainLayout>
               <ProfilePage />
+            </MainLayout>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/user-activity"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <UserActivity />
             </MainLayout>
           </PrivateRoute>
         }
