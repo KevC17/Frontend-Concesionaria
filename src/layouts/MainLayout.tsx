@@ -8,7 +8,7 @@ const { Header, Content, Footer } = Layout;
 const MainLayout = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
+  const [,setUserName] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
