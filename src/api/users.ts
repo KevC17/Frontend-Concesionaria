@@ -22,3 +22,8 @@ export const deleteUser = async (id: string) => {
   const response = await api.delete(`/admin/users/${id}`);
   return response.data;
 };
+
+export const getUserById = async (id: string) => {
+  const response = await api.get(`/users/${id}`);
+  return response.data;
+};

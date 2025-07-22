@@ -10,6 +10,7 @@ import AdminPage from '../pages/AdminPage';
 import PrivateRoute from './PrivateRoute';
 import PublicOnlyRoute from './PublicOnlyRoute';
 import PurchasePage from '../pages/PurchasePage';
+import ProfilePage from '../pages/ProfilePage';
 
 const AppRouter = () => {
   return (
@@ -29,6 +30,16 @@ const AppRouter = () => {
           <PublicOnlyRoute>
             <RegisterPage />
           </PublicOnlyRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <MainLayout>
+              <ProfilePage />
+            </MainLayout>
+          </PrivateRoute>
         }
       />
 

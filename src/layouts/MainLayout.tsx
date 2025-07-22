@@ -8,25 +8,32 @@ const { Header, Content, Footer } = Layout;
 const MainLayout = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
+    const storedUserName = localStorage.getItem('userName');
     if (token) {
       setIsAuthenticated(true);
       setIsAdmin(role === 'ADMIN');
+      setUserName(storedUserName);
     } else {
       setIsAuthenticated(false);
       setIsAdmin(false);
+      setUserName(null);
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
     setIsAuthenticated(false);
     setIsAdmin(false);
+    setUserName(null);
     navigate('/login');
   };
 
@@ -41,36 +48,42 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
             color: '#fff',
           }}
         >
-          {/* Navegación izquierda con logo */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Link to="/" style={{ marginRight: 24 }}>
               <img
-                src="/logo.png" // Asegúrate de que el logo esté en la carpeta `public/`
+                src="/logo.png"
                 alt="Logo"
                 style={{ height: 40 }}
               />
             </Link>
-            <Link to="/cars" style={{ color: '#fff', marginRight: 16 }}>Autos</Link>
-            <Link to="/contact" style={{ color: '#fff' }}>Contacto</Link>
+            <Link to="/cars" style={{ color: '#fff', marginRight: 16 }}>Cars</Link>
+            <Link to="/contact" style={{ color: '#fff' }}>Contact</Link>
           </div>
 
-          {/* Navegación derecha */}
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {isAuthenticated ? (
               <>
-                {isAdmin && (
-                  <Link to="/admin" style={{ color: '#fff', marginRight: 16 }}>
-                    Panel de administración
+                {!isAdmin && (
+                  <Link to="/profile" style={{ color: '#fff' }}>
+                    My Profile
                   </Link>
                 )}
+                {isAdmin && (
+                  <Link to="/admin" style={{ color: '#fff' }}>
+                    Admin Panel
+                  </Link>
+                )}
+                <span style={{ color: '#fff' }}>
+                  Welcome, {userName}
+                </span>
                 <span onClick={handleLogout} style={{ color: '#fff', cursor: 'pointer' }}>
-                  Cerrar sesión
+                  Logout
                 </span>
               </>
             ) : (
               <>
-                <Link to="/login" style={{ color: '#fff', marginRight: 16 }}>Iniciar sesión</Link>
-                <Link to="/register" style={{ color: '#fff' }}>Registrarse</Link>
+                <Link to="/login" style={{ color: '#fff' }}>Login</Link>
+                <Link to="/register" style={{ color: '#fff' }}>Register</Link>
               </>
             )}
           </div>
@@ -80,7 +93,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       <Content style={{ padding: '24px', background: '#fff' }}>{children}</Content>
 
       <Footer style={{ textAlign: 'center' }}>
-        © {new Date().getFullYear()} Concesionaria. Todos los derechos reservados.
+        © {new Date().getFullYear()} Car Dealership. All rights reserved.
       </Footer>
     </Layout>
   );
