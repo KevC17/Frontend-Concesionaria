@@ -16,7 +16,6 @@ import ProfilePage from '../pages/ProfilePage';
 const AppRouter = () => {
   return (
     <Routes>
-      {/* Rutas públicas solo si NO estás logueado */}
       <Route
         path="/login"
         element={
@@ -54,7 +53,6 @@ const AppRouter = () => {
         }
       />
 
-      {/* Ruta protegida para administradores */}
       <Route
         path="/admin"
         element={
@@ -64,7 +62,6 @@ const AppRouter = () => {
         }
       />
 
-      {/* Rutas públicas con layout */}
       <Route
         path="/"
         element={
@@ -106,7 +103,6 @@ const AppRouter = () => {
         }
       />
 
-      {/* Redirección por defecto */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

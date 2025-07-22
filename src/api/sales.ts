@@ -2,7 +2,7 @@ import api from './axios';
 
 export const getSales = async () => {
   const response = await api.get('/sales');
-  return response.data.data; // asumiendo que la data viene dentro de data.data
+  return response.data.data;
 };
 
 export const createSale = async (data: any) => {

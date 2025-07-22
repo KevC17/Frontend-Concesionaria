@@ -24,12 +24,10 @@ const AdminCars = () => {
   const [currentCar, setCurrentCar] = useState<any>(null);
   const [form] = Form.useForm();
 
-  // 👇 Paginación
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const pageSize = 10;
 
-  // ✅ Cargar autos según la página
   const fetchCars = async (pageNumber = 1) => {
     setLoading(true);
     try {
@@ -47,7 +45,7 @@ const AdminCars = () => {
     try {
       await deleteCar(id);
       message.success('Auto eliminado');
-      fetchCars(page); // recarga la página actual
+      fetchCars(page);
     } catch {
       message.error('Error al eliminar');
     }
@@ -101,7 +99,7 @@ const AdminCars = () => {
           total,
           showSizeChanger: false,
           onChange: (newPage) => {
-            setPage(newPage);     // Actualiza la página actual
+            setPage(newPage);
           },
         }}
         columns={[

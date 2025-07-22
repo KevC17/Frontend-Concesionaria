@@ -27,7 +27,6 @@ const HomePage = () => {
 
   return (
     <div>
-      {/* Sección Hero con parallax */}
       <div
         style={{
           backgroundImage: `url('/hero.jpg')`,
@@ -43,7 +42,6 @@ const HomePage = () => {
           padding: '0 20px',
         }}
       >
-        {/* Capa oscura sobre la imagen */}
         <div
           style={{
             position: 'absolute',
@@ -51,15 +49,14 @@ const HomePage = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.4)', // Oscurece la imagen
+            backgroundColor: 'rgba(0, 0, 0, 0.4)',
             zIndex: 1,
           }}
         ></div>
 
-        {/* Contenedor de texto opaco */}
         <div
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.85)', // Fondo blanco opaco
+            backgroundColor: 'rgba(255, 255, 255, 0.85)',
             padding: '40px',
             borderRadius: 12,
             zIndex: 2,
@@ -80,7 +77,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Contenido principal */}
       <div style={{ padding: '60px 24px' }}>
         <Title level={3}>Autos destacados</Title>
         <Row gutter={[16, 16]} style={{ marginTop: 16 }}>

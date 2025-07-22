@@ -63,7 +63,6 @@ const AdminPayments = () => {
   const handleFinish = async (values: any) => {
     try {
       if (currentPayment) {
-        // Solo permite actualizar status en este ejemplo
         await updatePaymentStatus(currentPayment.id, { status: values.status });
         message.success('Pago actualizado');
       } else {

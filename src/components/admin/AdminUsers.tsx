@@ -24,12 +24,10 @@ const AdminUsers = () => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [form] = Form.useForm();
 
-  // 👇 Estados de paginación
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const pageSize = 10;
 
-  // ✅ Obtener usuarios con paginación
   const fetchUsers = async (pageNumber = 1) => {
     setLoading(true);
     try {

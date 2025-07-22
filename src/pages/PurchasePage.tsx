@@ -63,7 +63,7 @@ const PurchasePage = () => {
         userId,
         reservationId: reservation.id,
         amount: car.price,
-        status: 'unpaid',
+        status: 'paid',
         });
 
         message.success('Compra realizada exitosamente');
