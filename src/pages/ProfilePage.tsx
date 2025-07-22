@@ -7,22 +7,28 @@ const ProfilePage = () => {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [editing, setEditing] = useState(false)
   const [error, setError] = useState(false)
 
-  useEffect(() => {
+  const fetchUserData = async () => {
     const userId = localStorage.getItem('userId')
-    axios
-      .get(`/users/${userId}`)
-      .then((res) => {
-        setUser(res.data)
-        form.setFieldsValue({
-          username: res.data.username,
-          email: res.data.email || ''
-        })
+    try {
+      const res = await axios.get(`/users/${userId}`)
+      setUser(res.data)
+      form.setFieldsValue({
+        username: res.data.username,
+        email: res.data.email || ''
       })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
-  }, [form])
+    } catch {
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchUserData()
+  }, [])
 
   const handleUpdate = async (values: any) => {
     const userId = localStorage.getItem('userId')
@@ -32,20 +38,22 @@ const ProfilePage = () => {
         username: values.username,
         email: values.email
       })
-      message.success('Profile updated successfully')
+      message.success('Perfil actualizado correctamente')
+      setEditing(false)
+      fetchUserData()
     } catch {
-      message.error('Failed to update profile')
+      message.error('No se pudo actualizar el perfil')
     } finally {
       setSubmitting(false)
     }
   }
 
   if (loading) return <Spin />
-  if (error) return <Alert message="Failed to load profile" type="error" />
+  if (error) return <Alert message="No se pudo cargar el perfil" type="error" />
 
   return (
     <div style={{ maxWidth: 500, margin: '0 auto', padding: '24px' }}>
-      <Card title="My Profile">
+      <Card title="Mi perfil">
         <Form
           form={form}
           layout="vertical"
@@ -55,17 +63,25 @@ const ProfilePage = () => {
             email: user?.email || ''
           }}
         >
-          <Form.Item label="Username" name="username" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item label="Nombre de usuario" name="username" rules={[{ required: true }]}>
+            <Input disabled={!editing} />
           </Form.Item>
-          <Form.Item label="Email" name="email">
-            <Input type="email" />
+          <Form.Item label="Correo electrónico" name="email">
+            <Input type="email" disabled={!editing} />
           </Form.Item>
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={submitting} block>
-              Save Changes
-            </Button>
-          </Form.Item>
+          {editing ? (
+            <Form.Item>
+              <Button type="primary" htmlType="submit" loading={submitting} block>
+                Guardar cambios
+              </Button>
+            </Form.Item>
+          ) : (
+            <Form.Item>
+              <Button type="default" onClick={() => setEditing(true)} block>
+                Cambiar datos
+              </Button>
+            </Form.Item>
+          )}
         </Form>
       </Card>
     </div>
