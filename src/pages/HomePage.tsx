@@ -67,10 +67,10 @@ const HomePage = () => {
           }}
         >
           <Title level={1} style={{ color: '#000', fontSize: '40px' }}>
-            Bienvenido a Tu Concesionaria
+            Bienvenido/a a Fast
           </Title>
           <Paragraph style={{ fontSize: 18, color: '#333' }}>
-            Encuentra el auto ideal para ti entre nuestra amplia variedad de vehículos nuevos y usados.
+            Encuentra el auto ideal para ti entre nuestra amplia variedad de vehículos de lujo.
           </Paragraph>
           <div style={{ marginTop: 24 }}>
             <Link to="/cars">
